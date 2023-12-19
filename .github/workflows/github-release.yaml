@@ -14,6 +14,12 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+      - name: Install Syft
+        run: curl -sSfL https://raw.githubusercontent.com/anchore/syft/main/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Generate SBOM
+        run: syft packages -o cyclonedx-json=sbom.json
+
       - name: Create Tag
         run: git tag ${{ github.event.inputs.tag }}
       
@@ -23,6 +29,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Create GitHub Release
-        run: gh release create ${{ github.event.inputs.tag }} --generate-notes
+        run: gh release create ${{ github.event.inputs.tag }} --generate-notes --notes-file sbom.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
