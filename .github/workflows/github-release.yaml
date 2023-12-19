@@ -4,7 +4,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Tag for the release'
+        description: "Tag for the release"
         required: true
 
 jobs:
@@ -13,6 +13,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+
+      - name: Install Cosign
+        uses: sigstore/cosign-installer@v3.3.0
+      - name: Check install!
+        run: cosign version
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
@@ -38,6 +43,9 @@ jobs:
         run: gh release upload ${{ github.event.inputs.tag }} *.spdx.json
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: list content
+        run: ls -l
 
       - name: Update Semantic Tag
         run: |
