@@ -10,6 +10,9 @@ on:
 jobs:
   release:
     runs-on: ubuntu-latest
+    env:
+      COSIGN_EXPERIMENTAL: "true"
+      COSIGN_YES: "true"
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
