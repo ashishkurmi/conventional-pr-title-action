@@ -25,7 +25,7 @@ jobs:
           format: "spdx"
 
       - name: Create Tag
-        run: git tag ${{ github.event.inputs.tag }}
+        run: git tag -s ${{ github.event.inputs.tag }}
 
       - name: Push Tag
         run: git push origin ${{ github.event.inputs.tag }}
