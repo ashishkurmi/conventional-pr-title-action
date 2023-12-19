@@ -27,6 +27,6 @@ jobs:
           sbom-artifact-match: ".*\\.spdx$"
           
       - name: Create GitHub Release
-        run: gh release create ${{ github.event.inputs.tag }} --generate-notes --notes-file sbom.json
+        run: gh release create ${{ github.event.inputs.tag }} --generate-notes
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
