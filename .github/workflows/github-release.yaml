@@ -37,11 +37,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Upload SBOM as Release Asset
-        run: gh release upload ${{ github.event.inputs.tag }} *.spdx.json
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: Update Semantic Tag
         run: |
           TAG=${{ github.event.inputs.tag }}
