@@ -30,7 +30,9 @@ jobs:
           format: "spdx"
 
       - name: Create Tag
-        run: git tag -s ${{ github.event.inputs.tag }}
+        run: git tag -s ${{ github.event.inputs.tag }} -m "Release ${{ github.event.inputs.tag }}"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Push Tag
         run: git push origin ${{ github.event.inputs.tag }}
