@@ -42,7 +42,7 @@ jobs:
       - name: Update Semantic Tag
         run: |
           TAG=${{ github.event.inputs.tag }}
-          SEMANTIC_TAG=${TAG%.*}
+          SEMANTIC_TAG=$(echo $TAG | grep -oP '^v\d+')
           git tag -f $SEMANTIC_TAG $TAG
           git push -f origin $SEMANTIC_TAG
         env:
