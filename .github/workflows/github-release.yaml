@@ -61,17 +61,6 @@ jobs:
           echo "Checksum for ${{ github.event.inputs.tag }}.tar.gz:"
           sha256sum ${{ github.event.inputs.tag }}.tar.gz
 
-      - name: Cosign source code and sbom
-        run: |
-          cosign sign-blob ${{ github.event.inputs.tag }}.zip --bundle ${{ github.event.inputs.tag }}.zip.cosign.bundle
-          cosign sign-blob ${{ github.event.inputs.tag }}.tar.gz --bundle ${{ github.event.inputs.tag }}.tar.gz.cosign.bundle
-          cosign sign-blob sbom-${{ github.event.inputs.tag }}.spdx.json --bundle sbom-${{ github.event.inputs.tag }}.spdx.json.cosign.bundle
-
-      - name: Upload Cosign Bundles
-        run: gh release upload ${{ github.event.inputs.tag }} *.cosign.bundle
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
       - name: list content
         run: ls -l
 
@@ -105,3 +94,4 @@ jobs:
       base64-subjects: "${{ needs.release.outputs.hashes }}"
       # Upload provenance to a new release
       upload-assets: true
+      upload-tag-name: "${{ github.event.inputs.tag }}"
