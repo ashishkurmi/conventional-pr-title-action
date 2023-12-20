@@ -49,18 +49,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Download Release Assets
-        run: |
-          curl -sL -o ${{ github.event.inputs.tag }}.zip https://github.com/${{ github.repository }}/archive/${{ github.event.inputs.tag }}.zip
-          curl -sL -o ${{ github.event.inputs.tag }}.tar.gz https://github.com/${{ github.repository }}/archive/${{ github.event.inputs.tag }}.tar.gz
-
-      - name: Compute Checksums
-        run: |
-          echo "Checksum for ${{ github.event.inputs.tag }}.zip:"
-          sha256sum ${{ github.event.inputs.tag }}.zip
-          echo "Checksum for ${{ github.event.inputs.tag }}.tar.gz:"
-          sha256sum ${{ github.event.inputs.tag }}.tar.gz
-
       - name: list content
         run: ls -l
 
