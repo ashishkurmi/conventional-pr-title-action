@@ -97,9 +97,21 @@ jobs:
         shell: bash
         id: hash
         run: |
-          echo "Generating hashes for artifacts"
-          HASHES=$(sha256sum sbom-${{ github.event.inputs.tag }}.spdx.json provenance.json | base64 -w0)
-          echo "hashes=$HASHES" >> "$GITHUB_OUTPUT"
+          echo "Generating hashes for artifacts..."
+          echo "Hash for sbom-${{ github.event.inputs.tag }}.spdx.json:"
+          HASH_SBOM=$(sha256sum sbom-${{ github.event.inputs.tag }}.spdx.json)
+          echo $HASH_SBOM
+
+          echo "Hash for provenance.json:"
+          HASH_PROVENANCE=$(sha256sum provenance.json)
+          echo $HASH_PROVENANCE
+
+          # Combine the hashes and encode them to base64
+          HASHES_BASE64=$(echo "$HASH_SBOM $HASH_PROVENANCE" | base64 -w0)
+          echo "Combined Base64 Encoded Hashes: $HASHES_BASE64"
+
+          # Set the hashes output
+          echo "hashes=$HASHES_BASE64" >> "$GITHUB_OUTPUT"
 
   # This step calls the generic workflow to generate provenance.
   provenance:
