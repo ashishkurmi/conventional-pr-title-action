@@ -9,6 +9,8 @@ on:
 
 jobs:
   release:
+    outputs:
+      hashes: ${{ steps.hash.outputs.hashes }}
     runs-on: ubuntu-latest
     env:
       COSIGN_EXPERIMENTAL: "true"
@@ -81,3 +83,25 @@ jobs:
           git push -f origin $SEMANTIC_TAG
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Generate hashes
+        shell: bash
+        id: hash
+        run: |
+          # sha256sum generates sha256 hash for all artifacts.
+          # base64 -w0 encodes to base64 and outputs on a single line.
+          # sha256sum artifact1 artifact2 ... | base64 -w0
+          echo "hashes=$(sha256sum ${{ github.event.inputs.tag }}.zip ${{ github.event.inputs.tag }}.tar.gz | base64 -w0)" >> "$GITHUB_OUTPUT"
+
+  # This step calls the generic workflow to generate provenance.
+  provenance:
+    needs: [release]
+    permissions:
+      actions: read
+      id-token: write
+      contents: write
+    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
+    with:
+      base64-subjects: "${{ needs.release.outputs.hashes }}"
+      # Upload provenance to a new release
+      upload-assets: true
