@@ -73,14 +73,31 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Generate Provenance File
+        run: |
+          echo "Generating provenance.json"
+          OWNER="${{ github.repository_owner }}"
+          REPO="${{ github.event.repository.name }}"
+          TAG_NAME="${{ github.event.inputs.tag }}"
+          COMMIT_SHA=$(git show-ref -s $TAG_NAME)
+          TAG_DETAILS=$(gh api repos/$OWNER/$REPO/git/commits/$COMMIT_SHA | jq '.')
+          jq -n --arg repository "${{ github.repository }}" \
+               --arg workflow "${{ github.workflow }}" \
+               --arg run_id "${{ github.run_id }}" \
+               --arg run_attempt "${{ github.run_attempt }}" \
+               --arg tag "$TAG_NAME" \
+               --arg commit_sha "$COMMIT_SHA" \
+               --argjson tag_details "$TAG_DETAILS" \
+               '{"repository": $repository, "workflow": $workflow, "run_id": $run_id, "run_attempt": $run_attempt, "tag": $tag, "commit_sha": $commit_sha, "tag_details": $tag_details}' > provenance.json
+          cat provenance.json
+
       - name: Generate hashes
         shell: bash
         id: hash
         run: |
-          # sha256sum generates sha256 hash for all artifacts.
-          # base64 -w0 encodes to base64 and outputs on a single line.
-          # sha256sum artifact1 artifact2 ... | base64 -w0
-          echo "hashes=$(sha256sum ${{ github.event.inputs.tag }}.zip ${{ github.event.inputs.tag }}.tar.gz | base64 -w0)" >> "$GITHUB_OUTPUT"
+          echo "Generating hashes for artifacts"
+          HASHES=$(sha256sum sbom-${{ github.event.inputs.tag }}.spdx.json provenance.json | base64 -w0)
+          echo "hashes=$HASHES" >> "$GITHUB_OUTPUT"
 
   # This step calls the generic workflow to generate provenance.
   provenance:
