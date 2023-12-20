@@ -90,6 +90,8 @@ jobs:
                --argjson tag_details "$TAG_DETAILS" \
                '{"repository": $repository, "workflow": $workflow, "run_id": $run_id, "run_attempt": $run_attempt, "tag": $tag, "commit_sha": $commit_sha, "tag_details": $tag_details}' > provenance.json
           cat provenance.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Generate hashes
         shell: bash
