@@ -107,8 +107,8 @@ jobs:
         run: |
           echo '#!/bin/bash' > provenance_verifier.sh
           echo '# Install slsa-verifier from https://github.com/slsa-framework/slsa-verifier' >> provenance_verifier.sh
-          echo '# Format: slsa-verifier verify-artifact --provenance-path <Path to multiple.intoto.jsonl> --source-uri <github repo url> <Path to sbom-v1.0.26.spdx.json> <Path to provenance.json>' >> provenance_verifier.sh
-          echo '# For example: slsa-verifier verify-artifact --provenance-path ~/${{ github.repository }}/multiple.intoto.jsonl --source-uri https://github.com/${{ github.repository }} ~/${{ github.repository }}/sbom-${{ github.event.inputs.tag }}.spdx.json ~/${{ github.repository }}/provenance.json' >> provenance_verifier.sh
+          echo '# Format: slsa-verifier verify-artifact --provenance-path <path to multiple.intoto.jsonl> --source-uri github.com/${{ github.repository }} <path to sbom-${{ github.event.inputs.tag }}.spdx.json> <path to provenance.json>' >> provenance_verifier.sh
+          echo '# For example: slsa-verifier verify-artifact --provenance-path ~/${{ github.repository }}/multiple.intoto.jsonl --source-uri github.com/${{ github.repository }} ~/${{ github.repository }}/sbom-${{ github.event.inputs.tag }}.spdx.json ~/${{ github.repository }}/provenance.json' >> provenance_verifier.sh
           chmod +x provenance_verifier.sh
           cat provenance_verifier.sh
           gh release upload ${{ github.event.inputs.tag }} provenance_verifier.sh
