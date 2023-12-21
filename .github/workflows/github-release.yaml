@@ -13,21 +13,9 @@ permissions:
 jobs:
   release:
     permissions:
+      actions: read
+      id-token: write
       contents: write
     uses: step-security/reusable-workflows/.github/workflows/actions_release.yaml@staging
     with:
       tag: "${{ github.event.inputs.tag }}"
-
-  # This step calls the generic workflow to generate provenance.
-  provenance:
-    needs: [release]
-    permissions:
-      actions: read
-      id-token: write
-      contents: write
-    uses: slsa-framework/slsa-github-generator/.github/workflows/generator_generic_slsa3.yml@v1.9.0
-    with:
-      base64-subjects: "${{ needs.release.outputs.hashes }}"
-      # Upload provenance to a new release
-      upload-assets: true
-      upload-tag-name: "${{ github.event.inputs.tag }}"
