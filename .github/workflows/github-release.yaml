@@ -12,12 +12,9 @@ jobs:
     outputs:
       hashes: ${{ steps.hash.outputs.hashes }}
     runs-on: ubuntu-latest
-    env:
-      COSIGN_EXPERIMENTAL: "true"
-      COSIGN_YES: "true"
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Generate SBOM
         uses: anchore/sbom-action@v0
