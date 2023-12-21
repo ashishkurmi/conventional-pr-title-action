@@ -14,7 +14,7 @@ jobs:
   release:
     permissions:
       contents: write
-    uses: step-security/reusable-workflows/blob/staging/.github/workflows/actions_release.yaml@staging
+    uses: step-security/reusable-workflows/.github/workflows/actions_release.yaml@staging
     with:
       tag: "${{ github.event.inputs.tag }}"
 
