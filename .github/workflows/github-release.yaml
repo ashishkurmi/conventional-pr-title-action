@@ -112,6 +112,8 @@ jobs:
           chmod +x provenance_verifier.sh
           cat provenance_verifier.sh
           gh release upload ${{ github.event.inputs.tag }} provenance_verifier.sh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
   # This step calls the generic workflow to generate provenance.
   provenance:
