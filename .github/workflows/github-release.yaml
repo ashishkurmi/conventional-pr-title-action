@@ -26,11 +26,10 @@ jobs:
           output-file: ./sbom-${{ github.event.inputs.tag }}.spdx.json
           format: "spdx"
 
-      - name: Create Tag
-        run: git tag ${{ github.event.inputs.tag }}
-
-      - name: Push Tag
-        run: git push origin ${{ github.event.inputs.tag }}
+      - name: Create and Push Tag
+        run: |
+          git tag ${{ github.event.inputs.tag }}
+          git push origin ${{ github.event.inputs.tag }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -74,7 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      - name: Generate hashes
+      - name: Generate Hashes
         shell: bash
         id: hash
         run: |
@@ -83,7 +82,7 @@ jobs:
           echo "hashes=$HASHES" >> "$GITHUB_OUTPUT"
           echo "hashes=$HASHES"
 
-      - name: Create and upload provenance_verifier.sh
+      - name: Create and Upload provenance_verifier.sh
         run: |
           echo '#!/bin/bash' > provenance_verifier.sh
           echo '# Install slsa-verifier from https://github.com/slsa-framework/slsa-verifier' >> provenance_verifier.sh
