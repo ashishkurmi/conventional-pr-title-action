@@ -93,6 +93,11 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+      - name: Upload Provenance as Release Asset
+        run: gh release upload ${{ github.event.inputs.tag }} provenance.json
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Generate hashes
         shell: bash
         id: hash
@@ -100,6 +105,7 @@ jobs:
           echo "Generating hashes for artifacts"
           HASHES=$(sha256sum sbom-${{ github.event.inputs.tag }}.spdx.json provenance.json | base64 -w0)
           echo "hashes=$HASHES" >> "$GITHUB_OUTPUT"
+          echo "hashes=$HASHES"
 
   # This step calls the generic workflow to generate provenance.
   provenance:
