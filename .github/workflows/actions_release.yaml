@@ -1,4 +1,4 @@
-name: Create and Publish Tagged Release
+name: Release GitHub Actions
 
 on:
   workflow_dispatch:
